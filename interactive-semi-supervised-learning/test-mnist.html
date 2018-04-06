@@ -2,21 +2,39 @@
         <head>
         <link rel="import" href="./facets-jupyter.html"></link>
         </head>        
-            <select id="ClassValue">
-                  <option value="newZeros">newZeros</option>
-                  <option value="newOnes">newOnes</option>
-                  <option value="newTwos">newTwos</option>
-                  <option value="newThrees">newThrees</option>
-                  <option value="newFours">newFours</option>
-                  <option value="newFives">newFives</option>
-                  <option value="newSixes">newSixes</option>
-                  <option value="newSevens">newSevens</option>
-                  <option value="newEights">newEights</option>
-                  <option value="newNines">newNines</option>
-        
-            </select>
-        
-        <input type="button" onclick="ClearEverything()" value="Erase">
+                   
+            
+            
+        <table style="width:100%">
+          <tr>
+            <th style="width:15%"></th>
+            <th style="width:10%"></th>
+            <th style="width:75%"><h1 id="msg_1" style="color:red">Selecting newZeros</h1></th>
+          </tr>
+          <tr>
+            <th>
+                Select Class : 
+                <select id="ClassValue">
+                      <option value="newZeros">newZeros</option>
+                      <option value="newOnes">newOnes</option>
+                      <option value="newTwos">newTwos</option>
+                      <option value="newThrees">newThrees</option>
+                      <option value="newFours">newFours</option>
+                      <option value="newFives">newFives</option>
+                      <option value="newSixes">newSixes</option>
+                      <option value="newSevens">newSevens</option>
+                      <option value="newEights">newEights</option>
+                      <option value="newNines">newNines</option>
+
+                </select>
+            </th>
+            <th>
+                 <input type="button" onclick="ClearEverything()" value="Erase">
+            </th>
+            <th></th>
+          </tr>
+        </table>
+            
         <p></p>
         <table style="width:100%">
           <tr>
@@ -39,6 +57,16 @@
 
 
              document.querySelector("#elem").data = data;
+             
+             document.getElementById("ClassValue").addEventListener("click", function(e){ 
+                  var e = document.getElementById("ClassValue");
+                  var keyVal = e.options[e.selectedIndex].value;
+                    console.log("ERere");
+                  var element = document.getElementById("msg_1");
+                    element.innerHTML = "Selecting " + keyVal;
+             
+             });
+             
              document.getElementById("elem").addEventListener("click", function(e){ 
 
     if (e.ctrlKey)
@@ -71,6 +99,7 @@ function ClearEverything() {
       var element = document.getElementById(keyVal);
       element.innerHTML = keyVal + " : 0" ;
       console.log(localStorage.key(i));
+      element.style.color = "black";
   }
   localStorage.clear();
 }
