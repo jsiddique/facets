@@ -14,7 +14,7 @@ Overview gives a high-level view of one or more data sets. It produces a visual 
 
 Overview can help uncover issues with datasets, including the following:
 
-* Unexpected feature values
+* Unexpected feature valuess
 * Missing feature values for a large number of examples
 * Training/serving skew
 * Training/test/validation set skew
