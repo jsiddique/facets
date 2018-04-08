@@ -5,31 +5,38 @@ class Facets():
     def __init__(self):
         self.html = """
         <meta http-equiv="Content-Type" content="text/html; charset=utf-16">
-        <!DOCTYPE html>
         <html>
             <head>
                 <link rel="import" href="./facets-jupyter.html"></link>
                 <style>
                     .button {
-                        display: inline-block;
-                        border-radius: 8px;
-                        background-color: #f4511e;
-                        border: none;
+                        background-color: #d73027;
                         color: #FFFFFF;
-                        text-align: center;
-                        font-size: 24px;
                         padding: 10px;
-                        width: 150px;
-                        transition: all 0.5s;
+                        font-size: 24px;
+                        border: none;
                         cursor: pointer;
-                        margin: 5px;
+                        border-radius: 8px;
+                        display: inline-block;
+                        width: 153px;
+                        transition: all 0.5s;
+                        outline: none;
                     }
-
                     .button span {
                         cursor: pointer;
                         display: inline-block;
                         position: relative;
                         transition: 0.5s;
+                        outline: none;
+                    }
+                    .counter-button {
+                        padding: 10px;
+                        font-size: 16px;
+                        border: none;
+                        cursor: pointer;
+                        border-radius: 6px;
+                        display: inline-block;
+                        outline: none;
                     }
 
                     .button span:after {
@@ -39,118 +46,114 @@ class Facets():
                         top: 0;
                         right: -20px;
                         transition: 0.5s;
+                        outline: none;
                     }
 
                     .button:hover span {
                         padding-right: 25px;
+                        outline: none;
                     }
-
                     .button:hover span:after {
                         opacity: 1;
                         right: 0;
+                        outline: none;
                     }
                     .dropbtn {
-                        background-color: #f4511e;
+                        background-color: #1a9850;
                         color: #FFFFFF;
                         padding: 10px;
                         font-size: 24px;
                         border: none;
                         cursor: pointer;
                         border-radius: 8px;
+                        outline: none;
                     }
-
                     .dropdown {
                         position: relative;
                         display: inline-block;
+                        outline: none;
                     }
-
                     .dropdown-content {
                         display: none;
                         position: absolute;
                         background-color: #f9f9f9;
-                        min-width: 160px;
+                        width: 100%;
                         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
                         z-index: 1;
+                        outline: none;
                     }
-
                     .dropdown-content a {
                         color: black;
                         padding: 12px 16px;
                         text-decoration: none;
                         display: block;
+                        outline: none;
                     }
-
                     .dropdown-content a:hover {background-color: #f1f1f1}
-
                     .dropdown:hover .dropdown-content {
                         display: block;
+                        outline: none;
                     }
-
                     .dropdown:hover .dropbtn {
-                        background-color: #3e8e41;
+                        background-color: #006837;
+                        outline: none;
                     }
                 </style>
             </head>
             <body>
-                <table style="width:100%">
+                <table style="width: 100%">
                     <tr>
-                        <th style="width:15%"></th>
-                        <th style="width:10%"></th>
-                        <th style="width:75%"><h1 id="msg_1" style="color:red">Selecting Class: {option-1}</h1></th>
-                    </tr>
-                    <tr>
-                        <th>
-                        <div class="dropdown">
-                            <button class="dropbtn">Select Class</button>
-                            <div class="dropdown-content">
+                        <td align="center">
+                            <button class="button" id="reset-button"><span>Reset </span></button>
+                                <div class="dropdown">
+                                    <button class="dropbtn" id="classselectbutton">Select Class</button>
+                                    <div class="dropdown-content">
                                 {options}
-                            </div>
-                        </div>
-                        </th>
-                        <th>
-                            <button class="button" id="reset-button" style="vertical-align:middle"><span>Reset </span></button>
-                        </th>
-                        <th></th>
+                                    </div>
+                                </div>
+                            </td>
                     </tr>
-                </table>
-                <p></p>
-
-                <table style="width:100%">
                     <tr>
-                        {counters}
+                        <td align="center">
+                            {label-buttons}
+                        </td>
                     </tr>
                 </table>
 
-                <facets-dive id="elem" height="{height}" sprite-image-width="{sprite-width}" sprite-image-height="{sprite-height}" atlas-url="{atlas-url}"></facets-dive>
+                <facets-dive id="elem" height="800" sprite-image-width="28" sprite-image-height="28" atlas-url="atlas.jpg"></facets-dive>
             </body>
             <script>
-                var selectedClass = {first-class};
+                var selectedClass = null;
                 var data = JSON.parse("{json}");
                 
                 document.querySelector("#elem").data = data;
                 document.getElementById("elem").addEventListener("click", function(e) {
-                    if (e.ctrlKey) {
-                        var keyVal = selectedClass;
-                        var theAnchorText = document.getElementById("infoCard").querySelector("dd").innerHTML;
-                        var existingItem = localStorage.getItem(keyVal);
-                        if (!existingItem) {
-                            existingItem = theAnchorText;
-                        } else {
-                            existingItem = (existingItem || "") + "," + theAnchorText;
+                    if (!!selectedClass) {
+                        if (e.ctrlKey) {
+                            var keyVal = selectedClass;
+                            console.log(keyVal)
+                            var theAnchorText = document.getElementById("infoCard").querySelector("dd").innerHTML;
+                            var existingItem = localStorage.getItem(keyVal);
+                            if (!existingItem) {
+                                existingItem = theAnchorText;
+                            } else {
+                                existingItem = (existingItem || "") + "," + theAnchorText;
+                            };
+                            localStorage.setItem(keyVal, existingItem);
+                            var element = document.getElementById("counter-" + keyVal);
+                            element.innerHTML = keyVal + ": " + existingItem.split(",").length;
                         };
-                        localStorage.setItem(keyVal, existingItem);
-                        var element = document.getElementById(keyVal);
-                        element.innerHTML = keyVal + " : " + existingItem.split(",").length;
-                    };
+                    }
                 });
                 document.getElementById("reset-button").addEventListener("click", function(e) {
-                  
                     for (var i=0; i<localStorage.length; i++){
                         var keyVal = localStorage.key(i);
-                        var element = document.getElementById(keyVal);
-                        element.innerHTML = keyVal + " : 0";
-                        element.style.color = "black"
-                    }
+                        var element = document.getElementById("counter-" + keyVal);
+                        element.innerHTML = keyVal + ": 0";
+                        var element_button = document.getElementById("classselectbutton");
+                        element_button.innerHTML = "Select Class";
+                    };
+                    localStorage.clear();
                 });
                 
                 var classname = document.getElementsByClassName("class-selector");
@@ -158,9 +161,9 @@ class Facets():
                     classname[i].addEventListener('click', function(e) {
                         var classNameVal = this.innerHTML;
                         var keyVal = classNameVal;
-                        var element = document.getElementById("msg_1");
-                        element.innerHTML = "Selecting: " + keyVal;
                         selectedClass = keyVal;
+                        var element_button = document.getElementById("classselectbutton");
+                        element_button.innerHTML = "Select Class: " + selectedClass;
                     });
                 };
             </script>
@@ -195,8 +198,8 @@ class Facets():
                                       
                                       
     def render_html(self, filename):
-        fp = open(filename, 'w')
-        fp.write(self.html)
+        fp = open(filename, 'wb')
+        fp.write(self.html.encode('utf8'))
         fp.close()
         
     def create_classes(self, labels=None):
@@ -217,19 +220,12 @@ class Facets():
         javascript_options = ""
         javascript_counters = ""
         for i, label in enumerate(self.labels):
-            if i == 0:
-                javascript_options += "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
-                javascript_counters+= "<th><b id=\"" + label + "\">" + label + ": 0</b></th>\n"
-            elif i != len(self.labels) - 1:
-                javascript_options += " "*28 + "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
-                javascript_counters+= " "*20 + "<th><b id=\"" + label + "\">" + label + ": 0</b></th>\n"
-            else:
-                javascript_options += " "*28 + "<a href=\"#\" class=\"class-selector\">" + label + "</a>"
-                javascript_counters+= " "*20 + "<th><b id=\"" + label + "\">" + label + ": 0</b></th>"
+            javascript_options += "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
+            javascript_counters+= "<button class=\"counter-button\" id=\"counter-" + label + "\">" + label + ": 0" + "</button>\n"
         
         self.html = self.html.replace("{options}", javascript_options)
         self.html = self.html.replace("{option-1}", self.labels[0])
-        self.html = self.html.replace("{counters}", javascript_counters)
+        self.html = self.html.replace("{label-buttons}", javascript_counters)
         self.html = self.html.replace("{first-class}", self.labels[0])
         
         
@@ -250,3 +246,45 @@ class Facets():
         """
         labels = js2py.eval_js(js_string)
         return labels
+        
+if __name__ == '__main__':
+    from tensorflow.examples.tutorials.mnist import input_data
+    import sklearn
+    from PIL import Image
+    import pandas as pd
+    
+    mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+    x, y = mnist.train.next_batch(60000)
+    x, y = sklearn.utils.shuffle(x, y, random_state=0)
+    x = x.reshape((x.shape[0], 28, 28, 1))
+    x_test, y_test = mnist.test.next_batch(10000)
+    x_test = x_test.reshape((x_test.shape[0], 28, 28, 1))
+    
+    def array_to_sprite_atlas(image_array, num_sprites_x, num_sprites_y):
+        "Takes an array of images of shape (num_images, img_width, img_height) and splices them together to form a big ass mosaic (sprite atlas)."
+        # Mnist arrays are in 0-1 range, PIL needs 0-255
+        image_array = image_array * 255
+        image_width, image_height = image_array.shape[1], image_array.shape[2]
+        atlas_width  = num_sprites_x * image_width
+        atlas_height = num_sprites_y * image_height
+        # We paste the samples to get indices arranged in the following way:
+        # | 0 | 1 | 2 | 3 |
+        # | 4 | 5 | 6 | 7 |
+        atlas  = Image.new("RGB", (atlas_width, atlas_height), (0, 0, 0))
+        for i in range(num_sprites_y): 
+            for j in range(num_sprites_x):
+                sample = image_array[num_sprites_x * i + j, :, :]
+                image = Image.fromarray(sample)
+                atlas.paste(image, (j*image_width, i*image_height))
+        return atlas
+    atlas = array_to_sprite_atlas(x_test.reshape(x_test.shape[0], 28, 28), 100, 100)
+    atlas.save("atlas.jpg", "JPEG")
+    
+    df = pd.DataFrame()
+    df['Id'] = [x for x in range(len(x_test))]
+    jsonstr = df.to_json(orient='records')
+
+    fc = Facets()
+    fc.create_classes(labels=[str(x) for x in range(0,10)])
+    fc.define_atlas(df, sprite_width=28, sprite_height=28, atlas_file='atlas.jpg')
+    fc.render_html('testing.html')
