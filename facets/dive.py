@@ -8,13 +8,30 @@ class Facets():
                 <link rel="import" href="./facets-jupyter.html"></link>
             </head>
             
-            <select id="ClassValue">
-                {options}
-            </select>
+            <table style="width:100%">
+                <tr>
+                    <th style="width:15%"></th>
+                    <th style="width:10%"></th>
+                    <th style="width:75%"><h1 id="msg_1" style="color:red">Selecting ----</h1></th>
+                </tr>
+                <tr>
+                    <th>
+                        Select Class:
+                        <select id="ClassValue">
+                            {options}
+                        </select>
+                    </th>
+                    <th>
+                        <input type="button" onClick="ClearEverything()", value="Reset">
+                    </th>
+                    <th></th>
+                </tr>
+            </table>
+            <p></p>
             
-            <input type="button" onclick="localStorage.clear()", value="Clear Local Storage">
-            
-            {counters}
+            <table style="width:100%">
+                <tr>{counters}</tr>
+            </table>
             
             <facets-dive id="elem" height="{height}" sprite-image-width="{sprite-width}" sprite-image-height="{sprite-height}" atlas-url="{atlas-url}"></facets-dive>
             <script>
@@ -37,6 +54,14 @@ class Facets():
                         element.innerHTML = keyVal + " : " + existingItem.split(",").length;
                     };
                 });
+                function ClearEverything(){
+                    for (var i=0; i<localStorage.length; i++){
+                        var keyVal = localStorage.key();
+                        var element = document.getElementById(keyVal);
+                        element.innerHTML = keyVal + " : 0";
+                        element.style.color = "black"
+                    }
+                }
             </script>
         """
         self.base_html = self.html
@@ -82,9 +107,13 @@ class Facets():
         
         javascript_options = ""
         javascript_counters = ""
-        for label in self.labels:
-            javascript_options += "<option value=\"" + label + "\">" + label + "</option>"
-            javascript_counters+= "<p id=\"" + label + "\">0</p>"
+        for i, label in enumerate(self.labels):
+            if i != len(self.labels) - 1:
+                javascript_options += " "*20 + "<option value=\"" + label + "\">" + label + "</option>\n"
+                javascript_counters+= "<th><b id=\"" + label + "\">" + label + ": 0</b></th>\n"
+            else:
+                javascript_options += "<option value=\"" + label + "\">" + label + "</option>"
+                javascript_counters+= "<th><b id=\"" + label + "\">" + label + ": 0</b></th>"
         
         self.html = self.html.replace("{options}", javascript_options)
         self.html = self.html.replace("{counters}", javascript_counters)
