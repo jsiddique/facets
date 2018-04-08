@@ -37,6 +37,17 @@ class Facets():
                         border-radius: 6px;
                         display: inline-block;
                         outline: none;
+                        background-color: #d9d9d9;
+                    }
+                    .counter-button-total {
+                        background-color: #addd8e;
+                        padding: 10px;
+                        font-size: 16px;
+                        border: none;
+                        cursor: pointer;
+                        border-radius: 6px;
+                        display: inline-block;
+                        outline: none;
                     }
 
                     .button span:after {
@@ -118,6 +129,11 @@ class Facets():
                             {label-buttons}
                         </td>
                     </tr>
+                    <tr>
+                        <td align="center">
+                            <div style="width: 100%; background-color: #525252; height: 3px; margin-top:6px"></div>
+                        </td>
+                    </tr>
                 </table>
 
                 <facets-dive id="elem" height="800" sprite-image-width="28" sprite-image-height="28" atlas-url="atlas.jpg"></facets-dive>
@@ -126,22 +142,42 @@ class Facets():
                 var selectedClass = null;
                 var data = JSON.parse("{json}");
                 
+                var totalLength = 0;
                 document.querySelector("#elem").data = data;
                 document.getElementById("elem").addEventListener("click", function(e) {
                     if (!!selectedClass) {
                         if (e.ctrlKey) {
                             var keyVal = selectedClass;
-                            console.log(keyVal)
                             var theAnchorText = document.getElementById("infoCard").querySelector("dd").innerHTML;
                             var existingItem = localStorage.getItem(keyVal);
-                            if (!existingItem) {
-                                existingItem = theAnchorText;
-                            } else {
-                                existingItem = (existingItem || "") + "," + theAnchorText;
+                            var found = false;
+                            for (var i=0; i<localStorage.length; i++){
+                                var tempKeyVal = localStorage.key(i);
+                                var tempExistingItem = localStorage.getItem(tempKeyVal);
+                                if (tempExistingItem) {
+                                    var itemList = tempExistingItem.split(',')
+                                    for (var i = 0; i < itemList.length && !found; i++) {
+                                        if (itemList[i] === theAnchorText) {
+                                            found = true;
+                                            break;
+                                        };
+                                    };
+                                };
                             };
-                            localStorage.setItem(keyVal, existingItem);
-                            var element = document.getElementById("counter-" + keyVal);
-                            element.innerHTML = keyVal + ": " + existingItem.split(",").length;
+                            
+                            if (!found) {
+                                totalLength += 1;
+                                if (!existingItem) {
+                                    existingItem = theAnchorText;
+                                } else {
+                                    existingItem = (existingItem || "") + "," + theAnchorText;
+                                };
+                                localStorage.setItem(keyVal, existingItem);
+                                var element = document.getElementById("counter-" + keyVal);
+                                var total_element = document.getElementById("counter-total");
+                                element.innerHTML = "<b>" + keyVal + ":</b> " + existingItem.split(",").length;
+                                total_element.innerHTML = "<b>Total:</b> " + totalLength;
+                            };
                         };
                     }
                 });
@@ -149,11 +185,20 @@ class Facets():
                     for (var i=0; i<localStorage.length; i++){
                         var keyVal = localStorage.key(i);
                         var element = document.getElementById("counter-" + keyVal);
-                        element.innerHTML = keyVal + ": 0";
+                        element.innerHTML = "<b>" + keyVal + ":</b> 0";
                         var element_button = document.getElementById("classselectbutton");
                         element_button.innerHTML = "Select Class";
+                        totalLength = 0;
+                        selectedClass = null;
                     };
+                    var total_element = document.getElementById("counter-total");
+                    total_element.innerHTML = "<b>Total:</b> 0";
                     localStorage.clear();
+                    
+                    var counterIds = document.getElementsByClassName('counter-button');
+                    for (var i = 0; i < counterIds.length; i++) {
+                        counterIds[i].style.backgroundColor = '#d9d9d9';
+                    };
                 });
                 
                 var classname = document.getElementsByClassName("class-selector");
@@ -164,6 +209,14 @@ class Facets():
                         selectedClass = keyVal;
                         var element_button = document.getElementById("classselectbutton");
                         element_button.innerHTML = "Select Class: " + selectedClass;
+                        var counterIds = document.getElementsByClassName('counter-button');
+                        for (var i = 0; i < counterIds.length; i++) {
+                            if (counterIds[i].id == 'counter-' + keyVal) {
+                                counterIds[i].style.backgroundColor = '#1a9850';
+                            } else {
+                                counterIds[i].style.backgroundColor = '#d9d9d9';
+                            };
+                        };
                     });
                 };
             </script>
@@ -221,7 +274,8 @@ class Facets():
         javascript_counters = ""
         for i, label in enumerate(self.labels):
             javascript_options += "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
-            javascript_counters+= "<button class=\"counter-button\" id=\"counter-" + label + "\">" + label + ": 0" + "</button>\n"
+            javascript_counters+= "<button style=\"margin-top: 6\" class=\"counter-button\" id=\"counter-" + label + "\"><b>" + label + ":</b> 0" + "</button>\n"
+        javascript_counters += "<button class=\"counter-button-total\" id=\"counter-total\"><b>Total:</b> 0</button>"
         
         self.html = self.html.replace("{options}", javascript_options)
         self.html = self.html.replace("{option-1}", self.labels[0])
