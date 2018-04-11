@@ -1,0 +1,217 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-16">
+<html>
+    <head>
+        <link rel="import" href="./facets-jupyter.html"></link>
+        <style>
+            .button {
+                background-color: #d73027;
+                color: #FFFFFF;
+                padding: 10px;
+                font-size: 24px;
+                border: none;
+                cursor: pointer;
+                border-radius: 8px;
+                display: inline-block;
+                width: 153px;
+                transition: all 0.5s;
+                outline: none;
+            }
+            .button span {
+                cursor: pointer;
+                display: inline-block;
+                position: relative;
+                transition: 0.5s;
+                outline: none;
+            }
+            .counter-button {
+                padding: 10px;
+                font-size: 16px;
+                border: none;
+                cursor: pointer;
+                border-radius: 6px;
+                display: inline-block;
+                outline: none;
+                background-color: #d9d9d9;
+            }
+            .counter-button-total {
+                background-color: #addd8e;
+                padding: 10px;
+                font-size: 16px;
+                border: none;
+                cursor: pointer;
+                border-radius: 6px;
+                display: inline-block;
+                outline: none;
+            }
+
+            .button span:after {
+                content: "»";
+                position: absolute;
+                opacity: 0;
+                top: 0;
+                right: -20px;
+                transition: 0.5s;
+                outline: none;
+            }
+
+            .button:hover span {
+                padding-right: 35px;
+                outline: none;
+            }
+            .button:hover span:after {
+                opacity: 1;
+                right: 0;
+                outline: none;
+            }
+            .dropbtn {
+                background-color: #1a9850;
+                color: #FFFFFF;
+                padding: 10px;
+                font-size: 24px;
+                border: none;
+                cursor: pointer;
+                border-radius: 8px;
+                outline: none;
+            }
+            .dropdown {
+                position: relative;
+                display: inline-block;
+                outline: none;
+            }
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f9f9f9;
+                width: 100%;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                outline: none;
+            }
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                outline: none;
+            }
+            .dropdown-content a:hover {background-color: #f1f1f1}
+            .dropdown:hover .dropdown-content {
+                display: block;
+                outline: none;
+            }
+            .dropdown:hover .dropbtn {
+                background-color: #006837;
+                outline: none;
+            }
+        </style>
+    </head>
+    <body>
+        <table style="width: 100%">
+            <tr>
+                <td align="center">
+                    <button class="button" id="reset-button"><span>Reset </span></button>
+                        <div class="dropdown">
+                            <button class="dropbtn" id="classselectbutton">Select Class</button>
+                            <div class="dropdown-content">
+{options}
+                            </div>
+                        </div>
+                    </td>
+            </tr>
+            <tr>
+                <td align="center">
+{label-buttons}
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <div style="width: 100%; background-color: #525252; height: 3px; margin-top:6px"></div>
+                </td>
+            </tr>
+        </table>
+
+        <facets-dive id="elem" height="800" sprite-image-width="28" sprite-image-height="28" atlas-url="atlas.jpg"></facets-dive>
+    </body>
+    <script>
+        var selectedClass = null;
+        var data = JSON.parse("{json}");
+        
+        var totalLength = 0;
+        document.querySelector("#elem").data = data;
+        document.getElementById("elem").addEventListener("click", function(e) {
+            if (selectedClass) {
+                if (e.ctrlKey) {
+                    var keyVal = selectedClass;
+                    var theAnchorText = document.getElementById("infoCard").querySelector("dd").innerHTML;
+                    var existingItem = localStorage.getItem(keyVal);
+                    var found = false;
+                    for (var i=0; i<localStorage.length; i++){
+                        var tempKeyVal = localStorage.key(i);
+                        var tempExistingItem = localStorage.getItem(tempKeyVal);
+                        if (tempExistingItem) {
+                            var itemList = tempExistingItem.split(',');
+                            for (var ii=0; ii<itemList.length && !found; ii++) {
+                                if (itemList[ii] === theAnchorText) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (!found) {
+                        totalLength += 1;
+                        if (!existingItem) {
+                            existingItem = theAnchorText;
+                        } else {
+                            existingItem = (existingItem || "") + "," + theAnchorText;
+                        }
+                        localStorage.setItem(keyVal, existingItem);
+                        var element = document.getElementById("counter-" + keyVal);
+                        var total_element = document.getElementById("counter-total");
+                        element.innerHTML = "<b>" + keyVal + ":</b> " + existingItem.split(",").length;
+                        total_element.innerHTML = "<b>Total:</b> " + totalLength;
+                    }
+                }
+            }
+        });
+        document.getElementById("reset-button").addEventListener("click", function() {
+            for (var i=0; i<localStorage.length; i++){
+                var keyVal = localStorage.key(i);
+                var element = document.getElementById("counter-" + keyVal);
+                element.innerHTML = "<b>" + keyVal + ":</b> 0";
+                var element_button = document.getElementById("classselectbutton");
+                element_button.innerHTML = "Select Class";
+                totalLength = 0;
+                selectedClass = null;
+            }
+            var total_element = document.getElementById("counter-total");
+            total_element.innerHTML = "<b>Total:</b> 0";
+            localStorage.clear();
+            
+            var counterIds = document.getElementsByClassName('counter-button');
+            for (var ii=0; ii<counterIds.length; ii++) {
+                counterIds[ii].style.backgroundColor = '#d9d9d9';
+            }
+        });
+        
+        var classname = document.getElementsByClassName("class-selector");
+        for (var i=0; i<classname.length; i++) {
+            classname[i].addEventListener('click', function() {
+                var classNameVal = this.innerHTML;
+                var keyVal = classNameVal;
+                selectedClass = keyVal;
+                var element_button = document.getElementById("classselectbutton");
+                element_button.innerHTML = "Select Class: " + selectedClass;
+                var counterIds = document.getElementsByClassName('counter-button');
+                for (var ii=0; ii<counterIds.length; ii++) {
+                    if (counterIds[ii].id === 'counter-' + keyVal) {
+                        counterIds[ii].style.backgroundColor = '#1a9850';
+                    } else {
+                        counterIds[ii].style.backgroundColor = '#d9d9d9';
+                    }
+                }
+            });
+        }
+    </script>
+</html>

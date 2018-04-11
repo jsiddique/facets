@@ -1,235 +1,52 @@
-import js2py
 import pandas as pd
+from IPython.core.magics.display import Javascript
+
 
 class Facets():
     def __init__(self):
-        self.html = """
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-16">
-        <html>
-            <head>
-                <link rel="import" href="./facets-jupyter.html"></link>
-                <style>
-                    .button {
-                        background-color: #d73027;
-                        color: #FFFFFF;
-                        padding: 10px;
-                        font-size: 24px;
-                        border: none;
-                        cursor: pointer;
-                        border-radius: 8px;
-                        display: inline-block;
-                        width: 153px;
-                        transition: all 0.5s;
-                        outline: none;
-                    }
-                    .button span {
-                        cursor: pointer;
-                        display: inline-block;
-                        position: relative;
-                        transition: 0.5s;
-                        outline: none;
-                    }
-                    .counter-button {
-                        padding: 10px;
-                        font-size: 16px;
-                        border: none;
-                        cursor: pointer;
-                        border-radius: 6px;
-                        display: inline-block;
-                        outline: none;
-                        background-color: #d9d9d9;
-                    }
-                    .counter-button-total {
-                        background-color: #addd8e;
-                        padding: 10px;
-                        font-size: 16px;
-                        border: none;
-                        cursor: pointer;
-                        border-radius: 6px;
-                        display: inline-block;
-                        outline: none;
-                    }
+        """Initialize the class object.
 
-                    .button span:after {
-                        content: "»";
-                        position: absolute;
-                        opacity: 0;
-                        top: 0;
-                        right: -20px;
-                        transition: 0.5s;
-                        outline: none;
-                    }
-
-                    .button:hover span {
-                        padding-right: 25px;
-                        outline: none;
-                    }
-                    .button:hover span:after {
-                        opacity: 1;
-                        right: 0;
-                        outline: none;
-                    }
-                    .dropbtn {
-                        background-color: #1a9850;
-                        color: #FFFFFF;
-                        padding: 10px;
-                        font-size: 24px;
-                        border: none;
-                        cursor: pointer;
-                        border-radius: 8px;
-                        outline: none;
-                    }
-                    .dropdown {
-                        position: relative;
-                        display: inline-block;
-                        outline: none;
-                    }
-                    .dropdown-content {
-                        display: none;
-                        position: absolute;
-                        background-color: #f9f9f9;
-                        width: 100%;
-                        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                        z-index: 1;
-                        outline: none;
-                    }
-                    .dropdown-content a {
-                        color: black;
-                        padding: 12px 16px;
-                        text-decoration: none;
-                        display: block;
-                        outline: none;
-                    }
-                    .dropdown-content a:hover {background-color: #f1f1f1}
-                    .dropdown:hover .dropdown-content {
-                        display: block;
-                        outline: none;
-                    }
-                    .dropdown:hover .dropbtn {
-                        background-color: #006837;
-                        outline: none;
-                    }
-                </style>
-            </head>
-            <body>
-                <table style="width: 100%">
-                    <tr>
-                        <td align="center">
-                            <button class="button" id="reset-button"><span>Reset </span></button>
-                                <div class="dropdown">
-                                    <button class="dropbtn" id="classselectbutton">Select Class</button>
-                                    <div class="dropdown-content">
-                                {options}
-                                    </div>
-                                </div>
-                            </td>
-                    </tr>
-                    <tr>
-                        <td align="center">
-                            {label-buttons}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center">
-                            <div style="width: 100%; background-color: #525252; height: 3px; margin-top:6px"></div>
-                        </td>
-                    </tr>
-                </table>
-
-                <facets-dive id="elem" height="800" sprite-image-width="28" sprite-image-height="28" atlas-url="atlas.jpg"></facets-dive>
-            </body>
-            <script>
-                var selectedClass = null;
-                var data = JSON.parse("{json}");
-                
-                var totalLength = 0;
-                document.querySelector("#elem").data = data;
-                document.getElementById("elem").addEventListener("click", function(e) {
-                    if (!!selectedClass) {
-                        if (e.ctrlKey) {
-                            var keyVal = selectedClass;
-                            var theAnchorText = document.getElementById("infoCard").querySelector("dd").innerHTML;
-                            var existingItem = localStorage.getItem(keyVal);
-                            var found = false;
-                            for (var i=0; i<localStorage.length; i++){
-                                var tempKeyVal = localStorage.key(i);
-                                var tempExistingItem = localStorage.getItem(tempKeyVal);
-                                if (tempExistingItem) {
-                                    var itemList = tempExistingItem.split(',')
-                                    for (var i = 0; i < itemList.length && !found; i++) {
-                                        if (itemList[i] === theAnchorText) {
-                                            found = true;
-                                            break;
-                                        };
-                                    };
-                                };
-                            };
-                            
-                            if (!found) {
-                                totalLength += 1;
-                                if (!existingItem) {
-                                    existingItem = theAnchorText;
-                                } else {
-                                    existingItem = (existingItem || "") + "," + theAnchorText;
-                                };
-                                localStorage.setItem(keyVal, existingItem);
-                                var element = document.getElementById("counter-" + keyVal);
-                                var total_element = document.getElementById("counter-total");
-                                element.innerHTML = "<b>" + keyVal + ":</b> " + existingItem.split(",").length;
-                                total_element.innerHTML = "<b>Total:</b> " + totalLength;
-                            };
-                        };
-                    }
-                });
-                document.getElementById("reset-button").addEventListener("click", function(e) {
-                    for (var i=0; i<localStorage.length; i++){
-                        var keyVal = localStorage.key(i);
-                        var element = document.getElementById("counter-" + keyVal);
-                        element.innerHTML = "<b>" + keyVal + ":</b> 0";
-                        var element_button = document.getElementById("classselectbutton");
-                        element_button.innerHTML = "Select Class";
-                        totalLength = 0;
-                        selectedClass = null;
-                    };
-                    var total_element = document.getElementById("counter-total");
-                    total_element.innerHTML = "<b>Total:</b> 0";
-                    localStorage.clear();
-                    
-                    var counterIds = document.getElementsByClassName('counter-button');
-                    for (var i = 0; i < counterIds.length; i++) {
-                        counterIds[i].style.backgroundColor = '#d9d9d9';
-                    };
-                });
-                
-                var classname = document.getElementsByClassName("class-selector");
-                for (var i = 0; i < classname.length; i++) {
-                    classname[i].addEventListener('click', function(e) {
-                        var classNameVal = this.innerHTML;
-                        var keyVal = classNameVal;
-                        selectedClass = keyVal;
-                        var element_button = document.getElementById("classselectbutton");
-                        element_button.innerHTML = "Select Class: " + selectedClass;
-                        var counterIds = document.getElementsByClassName('counter-button');
-                        for (var i = 0; i < counterIds.length; i++) {
-                            if (counterIds[i].id == 'counter-' + keyVal) {
-                                counterIds[i].style.backgroundColor = '#1a9850';
-                            } else {
-                                counterIds[i].style.backgroundColor = '#d9d9d9';
-                            };
-                        };
-                    });
-                };
-            </script>
-        </html>
+        Initializes the object and pulls the base html file with placeholders
+        that will be replaced with a subsequently defined atlas and class labels.
         """
+        with open('base.html', 'r') as fp:
+            self.html = fp.read()
         self.base_html = self.html
-        
+        self.atlas_defined = False
+        self.classes_defined = False
+
+
     def reset_facets(self):
+        """Reset the facets html string
+
+        Defining classes and and atlas overwrites the placeholders in the self.html 
+        string used to render the html file. If the atlas or class labels are redefined,
+        the html string must be 'reset'.
+        """
         self.html = self.base_html
-        
-        
+
+
     def define_atlas(self, atlas_df, atlas_height=800, sprite_width=100, sprite_height=100, atlas_file=None):
-        if type(df) != pd.core.frame.DataFrame:
+        """Defines an atlas and inserts the relevant html into the self.html string
+
+        This method is used to define the atlas object which forms the basis of the 
+        interactive image array in Facets. An atlas dataframe is supplied which 
+        contains the metadata for the images, along with relevant rendering parameters
+        such as sprite dimensions. 
+
+        args:
+            atlas_df: a pandas datafarme of the atlas metadata. The first column should
+                      be a unique id value
+        kwargs:
+             atlas_height: height of the atlas in pixels (default 800)
+             sprite_width: width of each individual image sprite in pixels (default 100)
+            sprite_height: height of each individual image sprite in pixels (default 100)
+               atlas_file: filepath of the atlas image (default None)
+
+        returns:
+            <None>
+        """
+        if type(atlas_df) != pd.core.frame.DataFrame:
             raise TypeError("You must supply a pandas DataFrame to define the atlas element characteristics.")
         if type(atlas_height) is not int:
             raise TypeError("You must supply an integer value for atlas height.")
@@ -239,26 +56,42 @@ class Facets():
             raise TypeError("You must supply an integer value for sprite height.")
         if sprite_width > atlas_height or sprite_height > atlas_height:
             raise ValueError("Sprites cannot be larger than the atlas.")
-        if atlas_file is None:
-            raise ValueError("You must supply an atlas file location.")
-        
-        self.atlas_df = atlas_df
+        if atlas_file is None or type(atlas_file) is not str:
+            raise ValueError("You must supply an atlas filepath as a string.")
+
+        self.atlas_df = atlas_df.copy()
         self.html = self.html.replace("{json}", self.atlas_df.to_json(orient="records").replace("\"", "\\\""))
         self.html = self.html.replace("{height}", str(atlas_height))
         self.html = self.html.replace("{sprite-width}", str(sprite_width))
         self.html = self.html.replace("{sprite-height}", str(sprite_height))
         self.html = self.html.replace("{atlas-url}", atlas_file)
-                                      
-                                      
+        self.atlas_defined = True
+
+
     def render_html(self, filename):
-        fp = open(filename, 'wb')
-        fp.write(self.html.encode('utf8'))
-        fp.close()
+        """Renders the html file used to interact with the Facets environment.
         
-    def create_classes(self, labels=None):
-        if labels is None:
-            raise ValueError("You must supply at least two labels.")
-        elif type(labels) is not list:
+        This writes the html file based on the modified self.html string and is
+        what you should then open to explore the atlas. Note that having 
+        facets-jupyter.html in the same directory is required.
+        """
+        if self.classes_defined and self.atlas_defined:
+            fp = open(filename, 'w')
+            fp.write(self.html)
+            fp.close()
+        else:
+            raise ValueError("You must define both an atlas and classes before you render the html file.")
+
+
+    def create_classes(self, labels):
+        """Create the possible classes (labels) for each example.
+
+        Use this method to create the possible classes (labels) for each example of your
+        data/atlas. The self.html string will be updated to reflect the possible choices
+        and present you with a list of selections that you can choose between when picking
+        training examples within Facets. Labels is passed simply as a list of strings.
+        """
+        if type(labels) is not list:
             raise TypeError("Labels must be passed as a list of strings.")
         else:
             if len(labels) < 2:
@@ -267,40 +100,43 @@ class Facets():
             for x in types:
                 if x is not str:
                     raise TypeError("Labels must be passed as a list of strings.")
-            
+
         self.labels = labels
-        
+
         javascript_options = ""
         javascript_counters = ""
         for i, label in enumerate(self.labels):
-            javascript_options += "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
-            javascript_counters+= "<button style=\"margin-top: 6\" class=\"counter-button\" id=\"counter-" + label + "\"><b>" + label + ":</b> 0" + "</button>\n"
-        javascript_counters += "<button class=\"counter-button-total\" id=\"counter-total\"><b>Total:</b> 0</button>"
-        
+            javascript_options += " "*32 + "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
+            javascript_counters+= " "*20 + "<button style=\"margin-top: 6\" class=\"counter-button\" id=\"counter-" + label + "\"><b>" + label + ":</b> 0" + "</button>\n"
+        javascript_counters += " "*20 + "<button class=\"counter-button-total\" id=\"counter-total\"><b>Total:</b> 0</button>"
+
         self.html = self.html.replace("{options}", javascript_options)
         self.html = self.html.replace("{option-1}", self.labels[0])
         self.html = self.html.replace("{label-buttons}", javascript_counters)
         self.html = self.html.replace("{first-class}", self.labels[0])
-        
-        
-    def return_labels(self):
+        self.classes_defined = True
+
+
+    def return_labels(self, var_name='label_dict'):
         js_string = """
-            function return_labels(){
-                for (var i=0; i<localStorage.length; i++){
-                    var key = localStorage.key(i);
-                    var existingItem = localStorage.getItem(key);
-                    if (key === null) {
-                        continue
-                    };
-                    var values = existingItem.replace("\n\", " ").replace("\r", " ");
-                    return values;
-                };
+        var label_dict = {};
+        for (var i=0; i<localStorage.length; i++) {
+            var key = localStorage.key(i);
+            if (key === null) {
+              continue
             };
-            return_labels()
+            var existingItem = localStorage.getItem(key);
+            var values = existingItem
+            label_dict[key] = values
+        };
+        var kernel = IPython.notebook.kernel;
+        kernel.execute('{var_name} = ' + JSON.stringify(label_dict))
         """
-        labels = js2py.eval_js(js_string)
-        return labels
-        
+        js_string = js_string.replace('{var_name}', var_name)
+        Javascript(js_string)
+        return locals()[var_name]
+
+
 if __name__ == '__main__':
     from tensorflow.examples.tutorials.mnist import input_data
     import sklearn
