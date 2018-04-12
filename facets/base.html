@@ -63,7 +63,7 @@
                 right: 0;
                 outline: none;
             }
-            .dropbtn {
+            .dropbtn-dive {
                 background-color: #1a9850;
                 color: #FFFFFF;
                 padding: 10px;
@@ -73,12 +73,12 @@
                 border-radius: 8px;
                 outline: none;
             }
-            .dropdown {
+            .dropdown-dive {
                 position: relative;
                 display: inline-block;
                 outline: none;
             }
-            .dropdown-content {
+            .dropdown-content-dive {
                 display: none;
                 position: absolute;
                 background-color: #f9f9f9;
@@ -87,19 +87,19 @@
                 z-index: 1;
                 outline: none;
             }
-            .dropdown-content a {
+            .dropdown-content-dive a {
                 color: black;
                 padding: 12px 16px;
                 text-decoration: none;
                 display: block;
                 outline: none;
             }
-            .dropdown-content a:hover {background-color: #f1f1f1}
-            .dropdown:hover .dropdown-content {
+            .dropdown-content-dive a:hover {background-color: #f1f1f1}
+            .dropdown-dive:hover .dropdown-content-dive {
                 display: block;
                 outline: none;
             }
-            .dropdown:hover .dropbtn {
+            .dropdown-dive:hover .dropbtn-dive {
                 background-color: #006837;
                 outline: none;
             }
@@ -110,9 +110,9 @@
             <tr>
                 <td align="center">
                     <button class="button" id="reset-button"><span>Reset </span></button>
-                        <div class="dropdown">
-                            <button class="dropbtn" id="classselectbutton">Select Class</button>
-                            <div class="dropdown-content">
+                        <div class="dropdown-dive">
+                            <button class="dropbtn-dive" id="classselectbutton">Select Class</button>
+                            <div class="dropdown-content-dive">
 {options}
                             </div>
                         </div>
@@ -130,7 +130,7 @@
             </tr>
         </table>
 
-        <facets-dive id="elem" height="800" sprite-image-width="28" sprite-image-height="28" atlas-url="atlas.jpg"></facets-dive>
+        <facets-dive id="elem" height="{atlas-height}" sprite-image-width="{sprite-width}" sprite-image-height="{sprite-height}" atlas-url="{atlas-url}"></facets-dive>
     </body>
     <script>
         var selectedClass = null;

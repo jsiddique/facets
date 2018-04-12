@@ -26,7 +26,7 @@ class Facets():
         self.html = self.base_html
 
 
-    def define_atlas(self, atlas_df, atlas_height=800, sprite_width=100, sprite_height=100, atlas_file=None):
+    def define_atlas(self, atlas_df, atlas_height=800, sprite_width=100, sprite_height=100, atlas_url=None):
         """Defines an atlas and inserts the relevant html into the self.html string
 
         This method is used to define the atlas object which forms the basis of the 
@@ -61,10 +61,10 @@ class Facets():
 
         self.atlas_df = atlas_df.copy()
         self.html = self.html.replace("{json}", self.atlas_df.to_json(orient="records").replace("\"", "\\\""))
-        self.html = self.html.replace("{height}", str(atlas_height))
+        self.html = self.html.replace("{atlas-height}", str(atlas_height))
         self.html = self.html.replace("{sprite-width}", str(sprite_width))
         self.html = self.html.replace("{sprite-height}", str(sprite_height))
-        self.html = self.html.replace("{atlas-url}", atlas_file)
+        self.html = self.html.replace("{atlas-url}", atlas_url)
         self.atlas_defined = True
 
 
@@ -117,26 +117,6 @@ class Facets():
         self.classes_defined = True
 
 
-    def return_labels(self, var_name='label_dict'):
-        js_string = """
-        var label_dict = {};
-        for (var i=0; i<localStorage.length; i++) {
-            var key = localStorage.key(i);
-            if (key === null) {
-              continue
-            };
-            var existingItem = localStorage.getItem(key);
-            var values = existingItem
-            label_dict[key] = values
-        };
-        var kernel = IPython.notebook.kernel;
-        kernel.execute('{var_name} = ' + JSON.stringify(label_dict))
-        """
-        js_string = js_string.replace('{var_name}', var_name)
-        Javascript(js_string)
-        return locals()[var_name]
-
-
 if __name__ == '__main__':
     from tensorflow.examples.tutorials.mnist import input_data
     import sklearn
@@ -147,7 +127,7 @@ if __name__ == '__main__':
     x, y = mnist.train.next_batch(60000)
     x, y = sklearn.utils.shuffle(x, y, random_state=0)
     x = x.reshape((x.shape[0], 28, 28, 1))
-    x_test, y_test = mnist.test.next_batch(10000)
+    x_test, y_test = mnist.test.next_batch(9)
     x_test = x_test.reshape((x_test.shape[0], 28, 28, 1))
     
     def array_to_sprite_atlas(image_array, num_sprites_x, num_sprites_y):
@@ -167,7 +147,7 @@ if __name__ == '__main__':
                 image = Image.fromarray(sample)
                 atlas.paste(image, (j*image_width, i*image_height))
         return atlas
-    atlas = array_to_sprite_atlas(x_test.reshape(x_test.shape[0], 28, 28), 100, 100)
+    atlas = array_to_sprite_atlas(x_test.reshape(x_test.shape[0], 28, 28), 3, 3)
     atlas.save("atlas.jpg", "JPEG")
     
     df = pd.DataFrame()
