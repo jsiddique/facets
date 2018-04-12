@@ -1,7 +1,6 @@
 import pandas as pd
 from IPython.core.magics.display import Javascript
 
-
 class Facets():
     def __init__(self):
         """Initialize the class object.
@@ -56,7 +55,7 @@ class Facets():
             raise TypeError("You must supply an integer value for sprite height.")
         if sprite_width > atlas_height or sprite_height > atlas_height:
             raise ValueError("Sprites cannot be larger than the atlas.")
-        if atlas_file is None or type(atlas_file) is not str:
+        if atlas_url is None or type(atlas_url) is not str:
             raise ValueError("You must supply an atlas filepath as a string.")
 
         self.atlas_df = atlas_df.copy()
@@ -82,7 +81,27 @@ class Facets():
         else:
             raise ValueError("You must define both an atlas and classes before you render the html file.")
 
+    def create_labeled_variables(self):
+        command = '''
 
+        for (var i =0; i <  localStorage.length; i++){
+            var key = localStorage.key(i);
+            var existingItem = localStorage.getItem(key);
+            console.log(key);
+            var var_name = key;
+            if( key == null)
+                continue
+            var value_name = existingItem.replace(\'\\n\', \' \').replace(\'\\r\', \' \');
+            //value_name = 'f1sadf';
+            var command =  var_name += " = \\" " +  value_name + " \\" ;";
+            console.log("Executing Command: " + command);
+            var kernel = IPython.notebook.kernel;
+            kernel.execute(command);
+        }
+        '''
+        return Javascript(command)
+         
+            
     def create_classes(self, labels):
         """Create the possible classes (labels) for each example.
 
