@@ -61,7 +61,8 @@ class Facets():
             raise ValueError("You must supply an atlas filepath as a string.")
 
         self.atlas_df = atlas_df.copy()
-        self.atlas_df['SessionLabel'] = None
+        if 'SessionLabel' not in self.atlas_df.columns:
+            self.atlas_df['SessionLabel'] = None
         self.html = self.html.replace("{json}", self.atlas_df.to_json(orient="records").replace("\"", "\\\""))
         self.html = self.html.replace("{atlas-height}", str(atlas_height))
         self.html = self.html.replace("{sprite-width}", str(sprite_width))
