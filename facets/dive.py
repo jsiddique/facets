@@ -13,6 +13,8 @@ class Facets():
         self.base_html = self.html
         self.atlas_defined = False
         self.classes_defined = False
+        self.label_dict = {}
+        
 
 
     def reset_facets(self):
@@ -81,26 +83,26 @@ class Facets():
         else:
             raise ValueError("You must define both an atlas and classes before you render the html file.")
 
-    def create_labeled_variables(self):
-        command = '''
-
-        for (var i =0; i <  localStorage.length; i++){
-            var key = localStorage.key(i);
-            var existingItem = localStorage.getItem(key);
-            console.log(key);
-            var var_name = key;
-            if( key == null)
-                continue
-            var value_name = existingItem.replace(\'\\n\', \' \').replace(\'\\r\', \' \');
-            //value_name = 'f1sadf';
-            var command =  var_name += " = \\" " +  value_name + " \\" ;";
-            console.log("Executing Command: " + command);
+    def create_labeled_variables(self, dict_name):
+        command = """
             var kernel = IPython.notebook.kernel;
-            kernel.execute(command);
-        }
-        '''
+            for (var i=0; i<localStorage.length; i++) {
+                var key = localStorage.key(i);
+                var existingItem = localStorage.getItem(key);
+                var var_name = key;
+                if (key === null) {
+                    continue
+                }
+                var values = existingItem.split(',')
+                for (var j=0; j<values.length; j++) {
+                    var command = "{dict_name}['" + var_name + "'] += ['" + values[j] + "']";
+                    kernel.execute(command);
+                    kernel.execute("{dict_name}['" + var_name + "'] = list(set({dict_name}['" + var_name + "']))");
+                }
+            }
+        """
+        command = command.replace('{dict_name}', dict_name)
         return Javascript(command)
-         
             
     def create_classes(self, labels):
         """Create the possible classes (labels) for each example.
@@ -125,6 +127,7 @@ class Facets():
         javascript_options = ""
         javascript_counters = ""
         for i, label in enumerate(self.labels):
+            self.label_dict[label] = []
             javascript_options += " "*32 + "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
             javascript_counters+= " "*20 + "<button style=\"margin-top: 6\" class=\"counter-button\" id=\"counter-" + label + "\"><b>" + label + ":</b> 0" + "</button>\n"
         javascript_counters += " "*20 + "<button class=\"counter-button-total\" id=\"counter-total\"><b>Total:</b> 0</button>"
@@ -134,6 +137,8 @@ class Facets():
         self.html = self.html.replace("{label-buttons}", javascript_counters)
         self.html = self.html.replace("{first-class}", self.labels[0])
         self.classes_defined = True
+
+        return self.label_dict
 
 
 if __name__ == '__main__':
