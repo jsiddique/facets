@@ -61,6 +61,7 @@ class Facets():
             raise ValueError("You must supply an atlas filepath as a string.")
 
         self.atlas_df = atlas_df.copy()
+        self.atlas_df['SessionLabel'] = None
         self.html = self.html.replace("{json}", self.atlas_df.to_json(orient="records").replace("\"", "\\\""))
         self.html = self.html.replace("{atlas-height}", str(atlas_height))
         self.html = self.html.replace("{sprite-width}", str(sprite_width))
@@ -180,5 +181,5 @@ if __name__ == '__main__':
 
     fc = Facets()
     fc.create_classes(labels=[str(x) for x in range(0,10)])
-    fc.define_atlas(df, sprite_width=28, sprite_height=28, atlas_file='atlas.jpg')
+    fc.define_atlas(df, sprite_width=28, sprite_height=28, atlas_url='atlas.jpg')
     fc.render_html('testing.html')

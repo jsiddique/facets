@@ -140,12 +140,27 @@
         document.querySelector("#elem").data = data;
         document.getElementById("elem").addEventListener("click", function(e) {
             if (selectedClass) {
-                if (e.ctrlKey) {
+                if (e.shiftKey) {
+                    var theAnchorTextToRemove = document.getElementById("infoCard").querySelector("dd").innerHTML;
+                    for (var is=0; is<localStorage.length; is++) {
+                        var tempKeyVal = localStorage.key(is);
+                        var itemListPreFix = localStorage.getItem(tempKeyVal);
+                        var itemized = itemListPreFix.split(',');
+                        var itemListFixed = [];
+                        for (var itemnum=0; itemnum<itemized.length; itemnum++) {
+                            if (itemized[itemnum] != theAnchorTextToRemove) {
+                                itemListFixed.push(itemized[itemnum]);
+                            }
+                        }
+                        localStorage.setItem(tempKeyVal, itemListFixed.join());
+                    }
+               }
+               if (e.ctrlKey) {
                     var keyVal = selectedClass;
                     var theAnchorText = document.getElementById("infoCard").querySelector("dd").innerHTML;
                     var existingItem = localStorage.getItem(keyVal);
                     var found = false;
-                    for (var i=0; i<localStorage.length; i++){
+                    for (var i=0; i<localStorage.length; i++){ 
                         var tempKeyVal = localStorage.key(i);
                         var tempExistingItem = localStorage.getItem(tempKeyVal);
                         if (tempExistingItem) {
@@ -171,20 +186,17 @@
                         var total_element = document.getElementById("counter-total");
                         element.innerHTML = "<b>" + keyVal + ":</b> " + existingItem.split(",").length;
                         total_element.innerHTML = "<b>Total:</b> " + totalLength;
+                        for (ij=0; ij<data.length; ij++) {
+                            var tempDataHold = data[ij];
+                            if (data[ij]['Id'] == theAnchorText) {
+                                data[ij]['SessionLabel'] = keyVal
+                            }
+                       }                                                      
                     }
                 }
             }
         });
         document.getElementById("reset-button").addEventListener("click", function() {
-            for (var i=0; i<localStorage.length; i++){
-                var keyVal = localStorage.key(i);
-                var element = document.getElementById("counter-" + keyVal);
-                element.innerHTML = "<b>" + keyVal + ":</b> 0";
-                var element_button = document.getElementById("classselectbutton");
-                element_button.innerHTML = "Select Class";
-                totalLength = 0;
-                selectedClass = null;
-            }
             var total_element = document.getElementById("counter-total");
             total_element.innerHTML = "<b>Total:</b> 0";
             localStorage.clear();
@@ -192,6 +204,9 @@
             var counterIds = document.getElementsByClassName('counter-button');
             for (var ii=0; ii<counterIds.length; ii++) {
                 counterIds[ii].style.backgroundColor = '#d9d9d9';
+                var counterlabel = counterIds[ii].innerHTML;
+                counterlabel = counterlabel.split(":")[0];
+                counterIds[ii].innerHTML = counterlabel + ":</b> 0";
             }
         });
         
