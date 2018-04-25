@@ -1,5 +1,7 @@
 from setuptools import setup
 
+pkg_data = {'': ['*.html']}
+
 setup(
     name='facets',
     version='0.1',
@@ -11,5 +13,6 @@ setup(
     zip_safe=False,
     packages=["facets"],
     include_package_data=True,
+    pkg_data=pkg_data,
     install_requires=["pandas", "numpy", "IPython"]
 )
