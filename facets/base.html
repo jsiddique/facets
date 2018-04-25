@@ -133,6 +133,7 @@
         <facets-dive id="elem" height="{atlas-height}" sprite-image-width="{sprite-width}" sprite-image-height="{sprite-height}" atlas-url="{atlas-url}"></facets-dive>
     </body>
     <script>
+        /*eslint-disable no-redeclare */
         var selectedClass = null;
         var data = JSON.parse("{json}");
         
@@ -147,10 +148,21 @@
                         var itemListPreFix = localStorage.getItem(tempKeyVal);
                         var itemized = itemListPreFix.split(',');
                         var itemListFixed = [];
+                        var was_removed = false;
                         for (var itemnum=0; itemnum<itemized.length; itemnum++) {
-                            if (itemized[itemnum] != theAnchorTextToRemove) {
+                            if (itemized[itemnum] !== theAnchorTextToRemove) {
                                 itemListFixed.push(itemized[itemnum]);
                             }
+                            if (itemized[itemnum] === theAnchorTextToRemove) {
+                                was_removed = true;
+                            }
+                        }
+                        if (was_removed) {
+                            totalLength -= 1;
+                            var counter_element = document.getElementById("counter-" + tempKeyVal);
+                            counter_element.innerHTML = "<b>" + tempKeyVal + ":</b> " + itemListFixed.length;
+                            var total_element = document.getElementById("counter-total");
+                            total_element.innerHTML = "<b>Total:</b> " + totalLength;
                         }
                         localStorage.setItem(tempKeyVal, itemListFixed.join());
                     }
@@ -186,16 +198,16 @@
                         var total_element = document.getElementById("counter-total");
                         element.innerHTML = "<b>" + keyVal + ":</b> " + existingItem.split(",").length;
                         total_element.innerHTML = "<b>Total:</b> " + totalLength;
-                        for (ij=0; ij<data.length; ij++) {
-                            var tempDataHold = data[ij];
-                            if (data[ij]['Id'] == theAnchorText) {
-                                data[ij]['SessionLabel'] = keyVal
+                        for (var ij=0; ij<data.length; ij++) {
+                            if (data[ij]['Id'] === theAnchorText) {
+                                data[ij]['SessionLabel'] = keyVal;
                             }
                        }                                                      
                     }
                 }
             }
         });
+        
         document.getElementById("reset-button").addEventListener("click", function() {
             var total_element = document.getElementById("counter-total");
             total_element.innerHTML = "<b>Total:</b> 0";
