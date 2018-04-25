@@ -12,7 +12,6 @@ setup(
     description=("""An extension of the facets tool for machine learning"""),
     license="MIT",
     zip_safe=False,
-    packages=["facets"],
     include_package_data=True,
     package_data=pkg_data,
     packages=pkgs,
