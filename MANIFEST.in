@@ -1,2 +1,2 @@
-include branca/base.html
-include branca/facets-jupyter.html
+include facets/base.html
+include facets/facets-jupyter.html

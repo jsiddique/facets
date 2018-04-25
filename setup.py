@@ -1,6 +1,6 @@
 from setuptools import setup
 
-pkg_data = {'': ['branca/facets-jupyter.html', 'branca/base.html']}
+pkg_data = {'': ['facets/facets-jupyter.html', 'facets/base.html']}
 pkgs = ['facets',]
 
 setup(
