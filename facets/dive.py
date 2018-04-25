@@ -1,5 +1,15 @@
 import pandas as pd
 from IPython.core.magics.display import Javascript
+import pkg_resources
+
+
+resource_package = __name__
+resource_path_base = '/base.html'
+resource_path_facets = '/facets-jupyter.html'
+
+base_html = pkg_resources.resource_stream(resource_package, resource_path_base).read()
+facets_html = pkg_resources.resource_stream(resource_package, resource_path_facets).read()
+
 
 class Facets():
     def __init__(self):
@@ -8,9 +18,9 @@ class Facets():
         Initializes the object and pulls the base html file with placeholders
         that will be replaced with a subsequently defined atlas and class labels.
         """
-        with open('base.html', 'r') as fp:
-            self.html = fp.read()
-        self.base_html = self.html
+        self.base_html = base_html
+        self.html = self.base_html
+        self.facets_html = facets_html
         self.atlas_defined = False
         self.classes_defined = False
         self.label_dict = {}
@@ -79,8 +89,13 @@ class Facets():
         facets-jupyter.html in the same directory is required.
         """
         if self.classes_defined and self.atlas_defined:
+            facets_path = filename.split('.html')[0] + '_facets.html'
+            self.html = self.html.replace("{reference}", facets_path)
             fp = open(filename, 'w')
             fp.write(self.html)
+            fp.close()
+            fp = open(facets_path, 'w')
+            fp.write(self.facets_html)
             fp.close()
         else:
             raise ValueError("You must define both an atlas and classes before you render the html file.")
