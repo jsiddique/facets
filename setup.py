@@ -1,10 +1,10 @@
 from setuptools import setup
 
-pkg_data = {'': ['*.html']}
+pkg_data = {'': ['branca/*.html']}
 
 setup(
     name='facets',
-    version='0.1',
+    version='0.2',
     author='J. Siddique and D. Lewis',
     url='https://github.com/jsiddique/facets',
     author_email='bi@geotab.com',
