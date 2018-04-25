@@ -1,6 +1,5 @@
 from setuptools import setup
 
-pkg_data = {'': ['branca/*.html']}
 pkgs = ['facets',]
 
 setup(
@@ -13,7 +12,6 @@ setup(
     license="MIT",
     zip_safe=False,
     include_package_data=True,
-    package_data=pkg_data,
     packages=pkgs,
     install_requires=["pandas", "numpy", "IPython"]
 )

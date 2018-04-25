@@ -1,1 +1,2 @@
-include branca/*.html
+include branca/base.html
+include branca/facets-jupyter.html
