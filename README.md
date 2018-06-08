@@ -1,4 +1,8 @@
-# Introduction
+## Introduction
+One of the biggest obsticale to supervised learning is lack of training data. Using our tool you can create your own training data in short amount of time. Our tool uses facets visualization tool for data exploration and captures user's interaction with the data. Overtime, you build a training dataset and a model by clicking the data. As the model matures, its prediction improves and the task of finding better examples becomes easier with each iteration. 
+
+
+## Introduction to Facets
 
 The facets project contains two visualizations for understanding and analyzing machine learning datasets: Facets Overview and Facets Dive.
 
