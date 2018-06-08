@@ -1,6 +1,7 @@
 ## Introduction
-One of the biggest obsticale to supervised learning is lack of training data. Using our tool you can create your own training data in short amount of time. Our tool uses facets visualization tool for data exploration and captures user's interaction with the data. Overtime, you build a training dataset and a model by clicking the data. As the model matures, its prediction improves and the task of finding better examples becomes easier with each iteration. 
+One of the biggest obsticale to supervised learning is lack of training data. Using our tool you can interactively create your own training data in short amount of time. Our tool uses facets visualization tool for data exploration and captures user's interaction with the data. Overtime, you build a training dataset and a model by clicking the data. As the model matures, its prediction improves and the task of finding better examples becomes easier with each iteration. 
 
+![Dive visualization of UCI census data](/interactive-semi-supervised-learning/screenshots/pick_group.png "Dive visualization of UCI census data -  Lichman, M. (2013). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml/datasets/Census+Income]. Irvine, CA: University of California, School of Information and Computer Science")
 
 ## Introduction to Facets
 
