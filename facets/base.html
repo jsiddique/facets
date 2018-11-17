@@ -167,7 +167,7 @@
                         localStorage.setItem(tempKeyVal, itemListFixed.join());
                     }
                }
-               if (e.ctrlKey) {
+               if (e.ctrlKey || e.metaKey) {
                     var keyVal = selectedClass;
                     var theAnchorText = document.getElementById("infoCard").querySelector("dd").innerHTML;
                     var existingItem = localStorage.getItem(keyVal);
