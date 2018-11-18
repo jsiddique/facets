@@ -43,7 +43,7 @@ Details about Dive usage can be found in its [README](./facets_dive/README.md).
 
 ## Installation
 ```
-git clone https://github.com/PAIR-code/facets
+git clone https://github.com/jsiddique/facets.git
 cd facets
 ```
 
