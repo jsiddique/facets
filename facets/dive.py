@@ -140,7 +140,7 @@ class Facets():
         javascript_counters = ""
         for i, label in enumerate(self.labels):
             self.label_dict[label] = []
-            javascript_options += " " * 32 + "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
+            javascript_options += " " * 32 + "<a  class=\"class-selector\">" + label + "</a>\n"
             javascript_counters += " " * 20 + "<button style=\"margin-top: 6\" class=\"counter-button\" id=\"counter-" + label + "\"><b>" + label + ":</b> 0" + "</button>\n"
         javascript_counters += " " * 20 + "<button class=\"counter-button-total\" id=\"counter-total\"><b>Total:</b> 0</button>"
 
