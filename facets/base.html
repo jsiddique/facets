@@ -158,7 +158,7 @@
         document.querySelector("#elem").atlasUrl = "{atlas-url}";
         document.getElementById("elem").addEventListener("click", function(e) {
             if (selectedClass) {
-                if (e.shiftKey) {
+                if (e.ctrlKey || e.metaKey) {
                     //var theAnchorTextToRemove = document.getElementById("infoCard").querySelector("dd").innerHTML;
 		    var theAnchorTextToRemove = document.getElementById("elem").shadowRoot.getElementById("infoCard").shadowRoot.querySelector("dd").innerHTML
                     for (var is=0; is<localStorage.length; is++) {
@@ -188,7 +188,7 @@
                     }
                }
 
-               if (e.ctrlKey || e.metaKey ) {
+               if (e.shiftKey ) {
                     var keyVal = selectedClass;
                     //var theAnchorText = document.getElementById("infoCard").shadowRoot.querySelector("holder").shadowRoot.querySelector("dd").innerHTML;
 		    var theAnchorText = document.getElementById("elem").shadowRoot.getElementById("infoCard").shadowRoot.querySelector("dd").innerHTML
