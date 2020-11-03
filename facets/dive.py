@@ -2,7 +2,6 @@ import pandas as pd
 from IPython.core.magics.display import Javascript
 import pkg_resources
 
-
 resource_package = __name__
 resource_path_base = '/base.html'
 resource_path_facets = '/facets-jupyter.html'
@@ -18,32 +17,29 @@ class Facets():
         Initializes the object and pulls the base html file with placeholders
         that will be replaced with a subsequently defined atlas and class labels.
         """
-        self.base_html = base_html
+        self.base_html = base_html.decode("utf-8")
         self.html = self.base_html
-        self.facets_html = facets_html
+        self.facets_html = facets_html.decode("utf-8")
         self.atlas_defined = False
         self.classes_defined = False
         self.label_dict = {}
-        
-
 
     def reset_facets(self):
         """Reset the facets html string
 
-        Defining classes and and atlas overwrites the placeholders in the self.html 
+        Defining classes and and atlas overwrites the placeholders in the self.html
         string used to render the html file. If the atlas or class labels are redefined,
         the html string must be 'reset'.
         """
         self.html = self.base_html
 
-
     def define_atlas(self, atlas_df, atlas_height=800, sprite_width=100, sprite_height=100, atlas_url=None):
         """Defines an atlas and inserts the relevant html into the self.html string
 
-        This method is used to define the atlas object which forms the basis of the 
-        interactive image array in Facets. An atlas dataframe is supplied which 
+        This method is used to define the atlas object which forms the basis of the
+        interactive image array in Facets. An atlas dataframe is supplied which
         contains the metadata for the images, along with relevant rendering parameters
-        such as sprite dimensions. 
+        such as sprite dimensions.
 
         args:
             atlas_df: a pandas datafarme of the atlas metadata. The first column should
@@ -80,12 +76,11 @@ class Facets():
         self.html = self.html.replace("{atlas-url}", atlas_url)
         self.atlas_defined = True
 
-
     def render_html(self, filename):
         """Renders the html file used to interact with the Facets environment.
-        
+
         This writes the html file based on the modified self.html string and is
-        what you should then open to explore the atlas. Note that having 
+        what you should then open to explore the atlas. Note that having
         facets-jupyter.html in the same directory is required.
         """
         if self.classes_defined and self.atlas_defined:
@@ -120,7 +115,7 @@ class Facets():
         """
         command = command.replace('{dict_name}', dict_name)
         return Javascript(command)
-            
+
     def create_classes(self, labels):
         """Create the possible classes (labels) for each example.
 
@@ -145,9 +140,9 @@ class Facets():
         javascript_counters = ""
         for i, label in enumerate(self.labels):
             self.label_dict[label] = []
-            javascript_options += " "*32 + "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
-            javascript_counters+= " "*20 + "<button style=\"margin-top: 6\" class=\"counter-button\" id=\"counter-" + label + "\"><b>" + label + ":</b> 0" + "</button>\n"
-        javascript_counters += " "*20 + "<button class=\"counter-button-total\" id=\"counter-total\"><b>Total:</b> 0</button>"
+            javascript_options += " " * 32 + "<a href=\"#\" class=\"class-selector\">" + label + "</a>\n"
+            javascript_counters += " " * 20 + "<button style=\"margin-top: 6\" class=\"counter-button\" id=\"counter-" + label + "\"><b>" + label + ":</b> 0" + "</button>\n"
+        javascript_counters += " " * 20 + "<button class=\"counter-button-total\" id=\"counter-total\"><b>Total:</b> 0</button>"
 
         self.html = self.html.replace("{options}", javascript_options)
         self.html = self.html.replace("{option-1}", self.labels[0])
