@@ -1,5 +1,8 @@
 import pandas as pd
 from IPython.core.magics.display import Javascript
+import IPython
+from google.colab import output
+
 import pkg_resources
 
 resource_package = __name__
@@ -88,26 +91,25 @@ class Facets():
         else:
             raise ValueError("You must define both an atlas and classes before you render the html file.")
 
-    def create_labeled_variables(self, dict_name):
+
+    def add_list_item(self, key, val):
+        label_dict[key] = val
+
+    def create_labeled_variables(self, label_dict):
+        output.register_callback('notebook.AddListItem', self.add_list_item)
         command = """
-            var kernel = IPython.notebook.kernel;
-            for (var i=0; i<localStorage.length; i++) {
-                var key = localStorage.key(i);
-                var existingItem = localStorage.getItem(key);
-                var var_name = key;
-                if (key === null) {
-                    continue
-                }
-                var values = existingItem.split(',')
-                for (var j=0; j<values.length; j++) {
-                    var command = "{dict_name}['" + var_name + "'] += ['" + values[j] + "']";
-                    kernel.execute(command);
-                    kernel.execute("{dict_name}['" + var_name + "'] = list(set({dict_name}['" + var_name + "']))");
-                }
-            }
-        """
-        command = command.replace('{dict_name}', dict_name)
+                for (var i=0; i<localStorage.length; i++) {
+                      var key = localStorage.key(i);
+                      var existingItem = localStorage.getItem(key);
+                      var var_name = key;
+                      if (key === null) {
+                          continue
+                      }
+                      google.colab.kernel.invokeFunction('notebook.AddListItem', [key, existingItem], {});
+              }
+              """
         return Javascript(command)
+
 
     def create_classes(self, labels):
         """Create the possible classes (labels) for each example.
