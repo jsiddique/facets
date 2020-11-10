@@ -93,9 +93,10 @@ class Facets():
 
 
     def add_list_item(self, key, val):
-        label_dict[key] = val
+        self.label_dict[key] = val
 
     def create_labeled_variables(self, label_dict):
+        self.label_dict = label_dict
         output.register_callback('notebook.AddListItem', self.add_list_item)
         command = """
                 for (var i=0; i<localStorage.length; i++) {
