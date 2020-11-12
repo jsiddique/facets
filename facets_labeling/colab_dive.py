@@ -91,11 +91,20 @@ class Facets():
         else:
             raise ValueError("You must define both an atlas and classes before you render the html file.")
 
-
     def add_list_item(self, key, val):
+        """Takes a key val pair and inserts them into a dictionary.
+
+        This function is used internally to store key val pair into
+        a dictionary.
+        """
         self.label_dict[key] = val
 
     def create_labeled_variables(self, label_dict):
+        """Inserts labeled entries into a dictonary that can be used in colab.
+
+        This function takes a dictionary as input. It extracts labeled examples
+        stored in localStorage and inserts them into a dictonary.
+        """
         self.label_dict = label_dict
         output.register_callback('notebook.AddListItem', self.add_list_item)
         command = """
@@ -110,7 +119,6 @@ class Facets():
               }
               """
         return Javascript(command)
-
 
     def create_classes(self, labels):
         """Create the possible classes (labels) for each example.
