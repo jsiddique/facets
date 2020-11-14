@@ -1,6 +1,8 @@
 ## Link to Colab Notebook
 
-Click on [this link](https://colab.research.google.com/github/jsiddique/facets_labeling/blob/master/colab_facets_labeling_demo.ipynb) for a demo of our labeling library.
+Click [this link](https://colab.research.google.com/github/jsiddique/facets_labeling/blob/master/colab_facets_labeling_demo.ipynb) for a demo of our labeling library in colab.
+
+![alt text](https://github.com/jsiddique/facets_labeling/blob/master/FacetsLabeling.gif?raw=true)
 
 ## Introduction
 One of the biggest obsticale to supervised learning is lack of training data. Using our tool you can interactively create your own training data in short amount of time. Our tool uses facets visualization tool for data exploration and captures user's interaction with the data. Overtime, you build a training dataset and a model by clicking the data. As the model matures, its prediction improves and the task of finding better examples becomes easier with each iteration. 
