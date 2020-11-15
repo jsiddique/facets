@@ -119,6 +119,11 @@
 
         <table style="width: 100%">
             <tr>
+               <td align="center">
+                  Use shift + mouse click to label an item
+                </td>
+            </tr>
+            <tr>
                 <td align="center">
 
                     <button class="button" id="reset-button"><span>Reset </span></button>
@@ -191,8 +196,11 @@
                if (e.shiftKey ) {
                     var keyVal = selectedClass;
                     //var theAnchorText = document.getElementById("infoCard").shadowRoot.querySelector("holder").shadowRoot.querySelector("dd").innerHTML;
-		    var theAnchorText = document.getElementById("elem").shadowRoot.getElementById("infoCard").shadowRoot.querySelector("dd").innerHTML
-		    var existingItem = localStorage.getItem(keyVal);
+		            var theAnchorText = document.getElementById("elem").shadowRoot.getElementById("infoCard").shadowRoot.querySelector("dd").innerHTML
+		            var existingItem = localStorage.getItem(keyVal);
+		            
+
+
                     var found = false;
                     for (var i=0; i<localStorage.length; i++){
                         var tempKeyVal = localStorage.key(i);
