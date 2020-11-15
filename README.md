@@ -1,6 +1,6 @@
 ## Link to Colab Notebook
 
-Click [this link](https://colab.research.google.com/github/jsiddique/facets_labeling/blob/master/colab_facets_labeling_demo.ipynb) for a demo of our labeling library in colab.
+Click [this link](https://colab.research.google.com/github/jsiddique/facets_labeling/blob/master/colab_facets_labeling_demo.ipynb) for a demo of FacetsLabeling tool in colab. The demo colab notebook works out of the box without any setup. It contains all the instructions needed to setup the tool in colab.  
 
 ![alt text](https://github.com/jsiddique/facets_labeling/blob/master/FacetsLabeling.gif?raw=true)
 
